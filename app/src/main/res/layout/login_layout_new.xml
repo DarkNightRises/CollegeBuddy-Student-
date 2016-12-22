@@ -11,12 +11,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <com.fourmob.panningview.library.PanningView
-            android:id="@+id/panningView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:src="@drawable/city_lights_after_rain"
-            custom:panningDurationInMs="40000" />
+
         <View
             android:layout_width="match_parent"
             android:layout_height="match_parent"

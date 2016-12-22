@@ -45,7 +45,6 @@ import android.widget.Toast;
 
 import android.app.Activity;
 
-import com.fourmob.panningview.library.PanningView;
 import com.gc.materialdesign.views.ButtonFlat;
 
 import org.json.JSONException;
@@ -61,7 +60,6 @@ import majorproject.kone.in.collegebudy.listener.NetworkResponseListener;
 public class LoginActivity extends Activity implements NetworkResponseListener, View.OnClickListener {
     public EditText mobileNumber;
     public EditText mPasswordView;
-    PanningView panningView;
     private TextView register, forgotPassword;
     public ProgressBar progressBar;
     private boolean isInternetConnected;
@@ -88,8 +86,6 @@ public class LoginActivity extends Activity implements NetworkResponseListener, 
         signUp.setOnClickListener(this);
         mobileNumber = (EditText) findViewById(R.id.mobileNumber);
         mPasswordView = (EditText) findViewById(R.id.password);
-        panningView = (PanningView) findViewById(R.id.panningView);
-        panningView.startPanning();
         ButtonFlat mEmailSignInButton = (ButtonFlat) findViewById(R.id.login);
         mEmailSignInButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -147,6 +143,8 @@ public class LoginActivity extends Activity implements NetworkResponseListener, 
 //            fetchDataforLists.setData(jsonObject);
 //            fetchDataforLists.setType_of_request(Config.POST);
 //            fetchDataforLists.execute();
+            Intent intent = new Intent(LoginActivity.this,NavigationActivity.class);
+            startActivity(intent);
         }
     }
 
@@ -180,13 +178,11 @@ public class LoginActivity extends Activity implements NetworkResponseListener, 
     @Override
     protected void onPause() {
         super.onPause();
-        panningView.stopPanning();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        panningView.startPanning();
 
     }
 
