@@ -162,7 +162,7 @@
 
         <EditText
 
-            android:id="@+id/section"
+            android:id="@+id/sections"
             style="@style/edittextStyle"
             android:hint="Section" />
 
@@ -173,7 +173,7 @@
 
         <EditText
 
-            android:id="@+id/password"
+            android:id="@+id/passwordss"
             style="@style/edittextStyle"
             android:hint="Password" />
 
@@ -184,7 +184,7 @@
 
         <EditText
 
-            android:id="@+id/confirm_password"
+            android:id="@+id/confirm_passwords"
             style="@style/edittextStyle"
             android:hint="Confirm Password" />
 

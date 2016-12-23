@@ -45,16 +45,16 @@ public class SignUpActivity extends Activity implements NetworkResponseListener 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.sign_up);
+        //setContentView(R.layout.sign_up);
         progressBar = (ProgressBar) findViewById(R.id.progress_bar);
-        findViewById(R.id.btn_submitSignUp).setOnClickListener(new View.OnClickListener() {
+       /* findViewById(R.id.btn_submitSignUp).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 name = ((EditText) findViewById(R.id.name)).getText().toString();
                 phone = ((EditText) findViewById(R.id.mobileNumber)).getText().toString();
                 password = ((EditText) findViewById(R.id.password)).getText().toString();
                 email = ((EditText) findViewById(R.id.email)).getText().toString();
-                confirmPassword = ((EditText) findViewById(R.id.confirmPassword)).getText().toString();
+               // confirmPassword = ((EditText) findViewById(R.id.confirmPassword)).getText().toString();
                 if (TextUtils.isEmpty(name)) {
                     ((EditText) findViewById(R.id.name)).setError("Field Required");
                 }
@@ -87,7 +87,7 @@ public class SignUpActivity extends Activity implements NetworkResponseListener 
 
                 }
             }
-        });
+        });*/
     }
 
     public boolean checkDetails() {
