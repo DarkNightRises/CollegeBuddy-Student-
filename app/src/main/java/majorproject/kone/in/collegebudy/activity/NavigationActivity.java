@@ -7,6 +7,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -18,6 +19,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.astuetz.PagerSlidingTabStrip;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import majorproject.kone.in.collegebudy.R;
 import majorproject.kone.in.collegebudy.adapter.CustomPagerAdapter;
@@ -41,6 +44,8 @@ private ViewPager dashboard_pager;
         setSupportActionBar(toolbar);
         initialiseViewPager();
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+
+        FirebaseApp.initializeApp(this);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -57,6 +62,8 @@ private ViewPager dashboard_pager;
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        String token=FirebaseInstanceId.getInstance().getToken();
+        Log.d("Refershered token",token);
     }
 
     @Override
