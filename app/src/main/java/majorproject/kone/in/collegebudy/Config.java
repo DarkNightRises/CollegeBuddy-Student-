@@ -8,4 +8,7 @@ public class Config {
     public static String POST="POST";
     public static String GET="GET";
     public static String SharedPreferences = "KoneCollegeBuddy";
+    public static String DATA = "data";
+    public static String REASON = "reason";
+
 }

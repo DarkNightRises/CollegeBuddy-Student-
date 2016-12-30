@@ -5,6 +5,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.media.RingtoneManager;
@@ -25,10 +26,16 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import majorproject.kone.in.collegebudy.Config;
 import majorproject.kone.in.collegebudy.R;
 import majorproject.kone.in.collegebudy.Utility.GPSTracker;
+import majorproject.kone.in.collegebudy.Utility.SharedPreferencesSingleton;
 import majorproject.kone.in.collegebudy.activity.MainActivity;
 import majorproject.kone.in.collegebudy.activity.NavigationActivity;
+import majorproject.kone.in.collegebudy.model.AttendanceModel;
 
 /**
  * Created by kartikey on 26/12/16.
@@ -39,6 +46,9 @@ public class CollegeBuddyFirebaseMessagingService extends FirebaseMessagingServi
     private GoogleApiClient googleApiClient;
     private Location mLastLocation;
     private String message,dataPayload;
+    private SharedPreferences sharedPreferences;
+    private SharedPreferences.Editor editor;
+    private AttendanceModel attendanceModel;
     /**
      * Called when message is received.
      *
@@ -60,11 +70,28 @@ public class CollegeBuddyFirebaseMessagingService extends FirebaseMessagingServi
         // TODO(developer): Handle FCM messages here.
         // Not getting messages here? See why this may be: https://goo.gl/39bRNJ
         Log.d(TAG, "From: " + remoteMessage.getFrom());
-
+        sharedPreferences = SharedPreferencesSingleton.getSharedPreference();
+        editor = SharedPreferencesSingleton.getSharedPreferenceEditor();
         // Check if message contains a data payload.
         dataPayload = remoteMessage.getData().get("payload");
         if (remoteMessage.getData().size() > 0) {
             Log.d(TAG, "Message data payload: " + dataPayload);
+            try {
+                JSONObject jsonObject = new JSONObject(dataPayload);
+                if(jsonObject.getString("reason").equals(AttendanceModel.ATTENDANCE)){
+                    attendanceModel = new AttendanceModel(jsonObject.getString(Config.DATA));
+                    Log.d("Attendance model",attendanceModel.getDATETIME()+"    "+attendanceModel.getSUBJECT_NAME());
+                    editor.putBoolean(AttendanceModel.IS_ATTENDANCE_IN_PROGRESS,true);
+                    editor.putLong(AttendanceModel.ORIGINAL_DATETIME,System.currentTimeMillis());
+                    editor.putString(attendanceModel.SUBJECT_ID,attendanceModel.getSUBJECT_ID());
+                    editor.putString(attendanceModel.LOCATION,attendanceModel.getLOCATION());
+                    editor.putString(attendanceModel.DATETIME,attendanceModel.getDATETIME());
+                    editor.putString(attendanceModel.SUBJECT_NAME,attendanceModel.getSUBJECT_NAME());
+                    editor.commit();
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
 
         // Check if message contains a notification payload.
@@ -132,7 +159,17 @@ public class CollegeBuddyFirebaseMessagingService extends FirebaseMessagingServi
 
         }
 
-        Log.d("Location",mLastLocation.getLatitude()+"   "+mLastLocation.getLongitude());
+        String latLng = (sharedPreferences.getString(attendanceModel.LOCATION,""));
+        latLng = latLng.substring(2,latLng.length()-1);
+        String[] latlngarray = latLng.split(",");
+        Location teacherLocation = new Location("");
+        teacherLocation.setLatitude(Double.parseDouble(latlngarray[0]));
+        teacherLocation.setLongitude(Double.parseDouble(latlngarray[1]));
+        Location studentLocation = new Location("");
+        studentLocation.setLatitude(mLastLocation.getLatitude());
+        studentLocation.setLongitude(mLastLocation.getLongitude());
+        Log.d("Location","Distance is "+ teacherLocation.distanceTo(studentLocation));
+
         sendNotification(message);
     }
 
