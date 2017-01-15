@@ -6,10 +6,20 @@
 
     >
 
+    <ProgressBar
+        android:visibility="gone"
+        android:id="@+id/progress_bar"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true" />
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/progress_bar">
 
 
         <View
@@ -65,12 +75,12 @@
                     android:tint="@android:color/white" />
 
                 <EditText
-                    android:id="@+id/mobileNumber"
+                    android:id="@+id/email"
                     android:layout_width="fill_parent"
                     android:layout_height="45dp"
                     android:hint="Mobile Number"
                     android:maxLines="1"
-                    android:text="1"
+                    android:text="hello"
                     android:padding="5dp"
                     android:singleLine="true"
                     android:textColor="@android:color/white"
@@ -115,7 +125,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="45dp"
                     android:hint="Password"
-                    android:text="1"
+                    android:text="12345"
                     android:inputType="textPassword"
                     android:maxLines="1"
                     android:padding="5dp"
@@ -210,12 +220,5 @@
         </LinearLayout>
 
     </FrameLayout>
-    <ProgressBar
-        android:visibility="gone"
-        android:id="@+id/progress_bar"
-        style="?android:attr/progressBarStyleLarge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true" />
 
 </RelativeLayout>

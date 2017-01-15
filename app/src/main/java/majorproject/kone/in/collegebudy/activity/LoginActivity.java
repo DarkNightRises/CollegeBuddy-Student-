@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -53,12 +54,14 @@ import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 
+import majorproject.kone.in.collegebudy.Config;
 import majorproject.kone.in.collegebudy.R;
 import majorproject.kone.in.collegebudy.listener.NetworkResponseListener;
+import majorproject.kone.in.collegebudy.network.FetchData;
 
 
 public class LoginActivity extends Activity implements NetworkResponseListener, View.OnClickListener {
-    public EditText mobileNumber;
+    public EditText email;
     public EditText mPasswordView;
     private TextView register, forgotPassword;
     public ProgressBar progressBar;
@@ -68,6 +71,7 @@ public class LoginActivity extends Activity implements NetworkResponseListener, 
     private TextView skipLogin;
     private Intent intent;
     public boolean forCompulsaryLogin = false;
+    private FetchData fetchDataforLists;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,7 +88,7 @@ public class LoginActivity extends Activity implements NetworkResponseListener, 
         });
         signUp = (TextView) findViewById(R.id.sign_up);
         signUp.setOnClickListener(this);
-        mobileNumber = (EditText) findViewById(R.id.mobileNumber);
+        email = (EditText) findViewById(R.id.email);
         mPasswordView = (EditText) findViewById(R.id.password);
         ButtonFlat mEmailSignInButton = (ButtonFlat) findViewById(R.id.login);
         mEmailSignInButton.setOnClickListener(new View.OnClickListener() {
@@ -111,10 +115,10 @@ public class LoginActivity extends Activity implements NetworkResponseListener, 
 
     public void attemptLogin() throws JSONException, UnsupportedEncodingException {
         // Reset errors.
-        mobileNumber.setError(null);
+        email.setError(null);
         mPasswordView.setError(null);
         // Store values at the time of the login attempt.
-        String mobile_number = mobileNumber.getText().toString();
+        String mobile_number = email.getText().toString();
         String password = mPasswordView.getText().toString();
         Log.d("Username and password", "Username" + mobile_number + password);
         boolean cancel = false;
@@ -127,24 +131,23 @@ public class LoginActivity extends Activity implements NetworkResponseListener, 
         }
         // Check for a valid email address.
         if (TextUtils.isEmpty(mobile_number)) {
-            mobileNumber.setError("Field Required");
-            focusView = mobileNumber;
+            email.setError("Field Required");
+            focusView = email;
             cancel = true;
         }
         if (cancel) {
             focusView.requestFocus();
         } else {
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("dataflow", "3");
-            jsonObject.put("phone", mobile_number);
+            jsonObject.put("email", mobile_number);
             jsonObject.put("password", password);
-//            fetchDataforLists = new FetchDataforLists(LoginActivity.this, this);
-//            fetchDataforLists.setUrl(Config.LOGIN);
-//            fetchDataforLists.setData(jsonObject);
-//            fetchDataforLists.setType_of_request(Config.POST);
-//            fetchDataforLists.execute();
-            Intent intent = new Intent(LoginActivity.this,NavigationActivity.class);
-            startActivity(intent);
+            fetchDataforLists = new FetchData(LoginActivity.this, this);
+            fetchDataforLists.setUrl(Config.BASE_URL+Config.LOGIN);
+            fetchDataforLists.setData(jsonObject);
+            fetchDataforLists.setType_of_request(Config.POST);
+            fetchDataforLists.execute();
+//            Intent intent = new Intent(LoginActivity.this,NavigationActivity.class);
+//            startActivity(intent);
         }
     }
 
@@ -157,7 +160,22 @@ public class LoginActivity extends Activity implements NetworkResponseListener, 
     public void postRequest(String result) throws MalformedURLException {
         progressBar.setVisibility(View.GONE);
         Log.d("Final Result", "  " + result);
-
+        try {
+            JSONObject jsonObject = new JSONObject(result);
+            if((jsonObject.getBoolean("success"))==true){
+//                JSONArray jsonArray = jsonObject.get
+                  JSONObject data = (JSONObject) (jsonObject.getJSONArray("data")).get(0);
+                  Toast.makeText(LoginActivity.this,"Login succesfull Data is "+data,Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(LoginActivity.this,NavigationActivity.class);
+            startActivity(intent);
+            }
+            else{
+                Toast.makeText(LoginActivity.this,"Login Unsuccessful... Invalid email id or password.",Toast.LENGTH_SHORT).show();
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        //Toast.makeText(LoginActivity.this,"Toast in Login is "+result,Toast.LENGTH_SHORT).show();
     }
 
 

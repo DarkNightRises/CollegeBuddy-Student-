@@ -38,6 +38,7 @@ import com.google.firebase.messaging.FirebaseMessaging;
 
 import majorproject.kone.in.collegebudy.Config;
 import majorproject.kone.in.collegebudy.R;
+import majorproject.kone.in.collegebudy.Utility.SharedPreferencesSingleton;
 import majorproject.kone.in.collegebudy.adapter.CustomPagerAdapter;
 
 public class NavigationActivity extends AppCompatActivity
@@ -65,8 +66,7 @@ public class NavigationActivity extends AppCompatActivity
         Log.d("Current Location", "" + currentLocation.toString());
         FirebaseApp.initializeApp(this);
         FirebaseMessaging.getInstance().subscribeToTopic("f18IT4");
-
-
+        FirebaseMessaging.getInstance().subscribeToTopic("f1CSE4");
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -74,20 +74,17 @@ public class NavigationActivity extends AppCompatActivity
                         .setAction("Action", null).show();
             }
         });
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
-
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         String token = FirebaseInstanceId.getInstance().getToken();
         Log.d("Refershered token", token);
-        mSharedPreferences = this.getSharedPreferences(Config.SharedPreferences, Context.MODE_PRIVATE);
-        mEditor = mSharedPreferences.edit();
-
+        mSharedPreferences = SharedPreferencesSingleton.getSharedPreference();
+        mEditor = SharedPreferencesSingleton.getSharedPreferenceEditor();
     }
 
     @Override

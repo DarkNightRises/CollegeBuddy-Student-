@@ -88,6 +88,20 @@ public class CollegeBuddyFirebaseMessagingService extends FirebaseMessagingServi
                     editor.putString(attendanceModel.DATETIME,attendanceModel.getDATETIME());
                     editor.putString(attendanceModel.SUBJECT_NAME,attendanceModel.getSUBJECT_NAME());
                     editor.commit();
+                    if(googleApiClient == null){
+                        googleApiClient = new GoogleApiClient.Builder(getApplicationContext())
+                                .addConnectionCallbacks(this)
+                                .addOnConnectionFailedListener(this)
+                                .addApi(LocationServices.API)
+                                .build();
+
+                    }
+                    googleApiClient.connect();
+                }
+                else{
+                    message =remoteMessage.getNotification().getBody();
+                    sendNotification(message);
+
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -98,16 +112,8 @@ public class CollegeBuddyFirebaseMessagingService extends FirebaseMessagingServi
         if (remoteMessage.getNotification() != null) {
             Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
         }
-        if(googleApiClient == null){
-            googleApiClient = new GoogleApiClient.Builder(getApplicationContext())
-                    .addConnectionCallbacks(this)
-                    .addOnConnectionFailedListener(this)
-                    .addApi(LocationServices.API)
-                    .build();
 
-        }
-        googleApiClient.connect();
-        message =remoteMessage.getNotification().getBody();
+
 
         // Also if you intend on generating your own notifications as a result of a received FCM
         // message, here is where that should be initiated. See sendNotification method below.

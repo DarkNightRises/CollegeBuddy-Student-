@@ -87,8 +87,9 @@ public class FetchData extends AsyncTask<String, Void, String> {
             url = new URL(urlString);
             urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestMethod(type_of_request);
-            urlConnection.setDoOutput(true);
-            urlConnection.connect();
+            if(type_of_request.equals(Config.POST)) {
+                urlConnection.setDoOutput(true);
+            }urlConnection.connect();
             if(type_of_request.equals(Config.POST)){
                 OutputStreamWriter wr = new OutputStreamWriter(urlConnection.getOutputStream());
                 wr.write(fetchedData);
@@ -109,6 +110,7 @@ public class FetchData extends AsyncTask<String, Void, String> {
                 return null;
             }
             String jsonResponse = buffer.toString();
+            Log.d("Got response ","Resposne is "+jsonResponse);
             return jsonResponse;
         } catch (IOException e) {
             e.printStackTrace();
