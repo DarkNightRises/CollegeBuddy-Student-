@@ -15,7 +15,9 @@ import android.widget.ImageView;
 
 
 import majorproject.kone.in.collegebudy.R;
+import majorproject.kone.in.collegebudy.Utility.SharedPreferencesSingleton;
 import majorproject.kone.in.collegebudy.adapter.PagerAdapter;
+import majorproject.kone.in.collegebudy.model.Student;
 
 
 /**
@@ -62,12 +64,14 @@ public class IntroActivity extends FragmentActivity {
             @Override
             public void onPageScrolled(int arg0, float arg1, int arg2) {
                 // TODO Auto-generated method stub
+               Intent pageIntent;
                 if (mPageEnd && arg0 == selectedIndex) {
                     if (arg0 == 2) {
-                        Intent i = new Intent(IntroActivity.this,
+                         pageIntent = new Intent(IntroActivity.this,
                                 LoginActivity.class);
+
                         overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
-                        startActivity(i);
+                        startActivity(pageIntent);
                         finish();
                     }
                     mPageEnd = false;//To avoid multiple calls.

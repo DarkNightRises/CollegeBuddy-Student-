@@ -14,5 +14,5 @@ public class Config {
     public static String LOGIN = "/loginStudent";
     public static String GET_COLLEGE_LIST = "/getCollegeList";
     public static String GET_BRANCH = "/getBranch";
-
+    public static String SIGNUP = "/signupStudent";
 }

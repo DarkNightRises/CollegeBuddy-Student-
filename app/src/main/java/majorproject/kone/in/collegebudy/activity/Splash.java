@@ -11,6 +11,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import majorproject.kone.in.collegebudy.R;
+import majorproject.kone.in.collegebudy.Utility.SharedPreferencesSingleton;
+import majorproject.kone.in.collegebudy.model.Student;
 
 /**
  * Created by koneracks on 12/21/15.
@@ -26,8 +28,18 @@ public class Splash extends Activity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-           Intent i = new Intent(Splash.this,IntroActivity.class);
-                startActivity(i);
+               Intent pageIntent;
+                if(!SharedPreferencesSingleton.getSharedPreference().getString(Student.name,"").equals("")){
+                    pageIntent = new Intent(Splash.this,
+                            NavigationActivity.class);
+
+                }
+                else {
+
+
+                    pageIntent = new Intent(Splash.this, IntroActivity.class);
+                }
+                startActivity(pageIntent);
                 overridePendingTransition(android.R.anim.fade_in,
                         android.R.anim.fade_out);
                 finish();

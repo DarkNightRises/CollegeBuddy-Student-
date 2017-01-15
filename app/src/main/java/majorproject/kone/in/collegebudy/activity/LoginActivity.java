@@ -57,6 +57,7 @@ import java.net.MalformedURLException;
 import majorproject.kone.in.collegebudy.Config;
 import majorproject.kone.in.collegebudy.R;
 import majorproject.kone.in.collegebudy.listener.NetworkResponseListener;
+import majorproject.kone.in.collegebudy.model.Student;
 import majorproject.kone.in.collegebudy.network.FetchData;
 
 
@@ -166,6 +167,8 @@ public class LoginActivity extends Activity implements NetworkResponseListener, 
 //                JSONArray jsonArray = jsonObject.get
                   JSONObject data = (JSONObject) (jsonObject.getJSONArray("data")).get(0);
                   Toast.makeText(LoginActivity.this,"Login succesfull Data is "+data,Toast.LENGTH_SHORT).show();
+                    //Saving student credentials
+                Student student = new Student(data);
                             Intent intent = new Intent(LoginActivity.this,NavigationActivity.class);
             startActivity(intent);
             }

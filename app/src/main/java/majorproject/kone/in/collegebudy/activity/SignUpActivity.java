@@ -28,6 +28,7 @@ import majorproject.kone.in.collegebudy.R;
 import majorproject.kone.in.collegebudy.listener.NetworkResponseListener;
 import majorproject.kone.in.collegebudy.model.Branch;
 import majorproject.kone.in.collegebudy.model.College;
+import majorproject.kone.in.collegebudy.model.Student;
 import majorproject.kone.in.collegebudy.network.FetchData;
 
 /**
@@ -38,11 +39,6 @@ public class SignUpActivity extends Activity implements NetworkResponseListener,
     Button singnUpButton;
    // FetchDataforLists fetchDataforLists;
     JSONObject jsonObject;
-    boolean isNamePatternCorrect, isEmailPatternCorrect;
-    public static String confirmPassword, name, phone, password, email, city;
-    public static String nameRegex = "^[\\p{L} .'-]+$";
-    public static final String emailRegex =
-            "\\b[\\w.%-]+@[-.\\w]+\\.[A-Za-z]{2,4}\\b";
     private JSONObject resultObject;
     private Intent intent;
     private SharedPreferences sharedpreferences;
@@ -54,7 +50,7 @@ public class SignUpActivity extends Activity implements NetworkResponseListener,
     private Branch branch;
     private Spinner collegeList,branchList;
     private EditText name,email,mobile_number,password,confirmpassword,section,year,student_number;
-
+    private Student student;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,14 +80,7 @@ public class SignUpActivity extends Activity implements NetworkResponseListener,
         fetchData.setUrl(Config.BASE_URL+Config.GET_COLLEGE_LIST);
         fetchData.execute();
     }
-    public boolean checkDetails() {
-        isNamePatternCorrect = matchWithRegex(nameRegex, name);
-        isEmailPatternCorrect = matchWithRegex(emailRegex, email);
-        if (isNamePatternCorrect && isEmailPatternCorrect) {
-            return true;
-        }
-        return false;
-    }
+
 
     public static boolean matchWithRegex(String regex, String sampleText) {
         Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
@@ -140,7 +129,23 @@ public class SignUpActivity extends Activity implements NetworkResponseListener,
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-        }}
+        }
+          else if (dataflow == 3){
+            try {
+                resultObject = new JSONObject(result);
+                Log.d("result object","Result object is "+result);
+                if(resultObject.getBoolean("success") == true) {
+                    student = new Student((JSONObject) resultObject.getJSONArray("data").get(0));
+                    Intent intent = new Intent(SignUpActivity.this,NavigationActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            }
+      }
 }
 
     @Override
@@ -154,7 +159,19 @@ public class SignUpActivity extends Activity implements NetworkResponseListener,
     public void singup(){
 
         if(validate()){
-
+            try {
+                dataflow = 3;
+                JSONObject postData =   getPostData();
+                fetchData = new FetchData(SignUpActivity.this,SignUpActivity.this);
+                fetchData.setUrl(Config.BASE_URL+Config.SIGNUP);
+                fetchData.setType_of_request(Config.POST);
+                fetchData.setData(postData);
+                fetchData.execute();
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
     }
     public boolean validate(){
@@ -167,6 +184,15 @@ public class SignUpActivity extends Activity implements NetworkResponseListener,
         try {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("name",name.getText().toString());
+            jsonObject.put("email",email.getText().toString());
+            jsonObject.put("mobile_no",mobile_number.getText().toString());
+            jsonObject.put("password",password.getText().toString());
+            jsonObject.put("branch_id",branch.getId(branchList.getSelectedItemPosition()));
+            jsonObject.put("section",section.getText().toString());
+            jsonObject.put("year",Integer.parseInt(year.getText().toString()));
+            jsonObject.put("college_id",college.getId(collegeList.getSelectedItemPosition()));
+            jsonObject.put("student_number",Integer.parseInt(student_number.getText().toString()));
+            Log.d("JSON Object ","JSON Object is "+jsonObject);
             return jsonObject;
         } catch (JSONException e) {
             e.printStackTrace();
