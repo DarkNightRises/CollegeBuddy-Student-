@@ -5,8 +5,8 @@
     android:background="#eee"
     android:layout_height="match_parent">
 
-    <TextView
-        android:text="Enter your Query...."
+    <EditText
+        android:hint="Enter your Query...."
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/textView2"
@@ -16,7 +16,7 @@
         android:textSize="30sp"
         />
 
-    <TextView
+    <EditText
         android:padding="10dp"
         android:layout_margin="10dp"
         android:layout_width="match_parent"
